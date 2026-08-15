@@ -7,6 +7,7 @@
 #define BOARD_SIZE 8
 #define WHITE 0
 #define BLACK 1
+#define PIECE_TEXTURE_COUNT 13
 
 
 extern int WIDTH;
@@ -29,8 +30,12 @@ enum {
 };
 
 typedef struct{
-    int curentPlayer;
+    int currentPlayer;
     int board[BOARD_SIZE][BOARD_SIZE];
+    int hover_x, hover_y;
+    int CC_x, CC_y;
+    int LC_x, LC_y;
+
 } gameState;
 
 
@@ -38,6 +43,7 @@ typedef struct{
     SDL_Window *window;
     SDL_Renderer *renderer;
     gameState game;
+    SDL_Texture *pieceTextures[PIECE_TEXTURE_COUNT];
 } AppState;
 
 

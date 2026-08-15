@@ -26,6 +26,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
+    if(!loadPieceTextures(state)) {
+        return SDL_APP_FAILURE;
+    }
 
     return SDL_APP_CONTINUE;
 }
@@ -45,6 +48,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
+
+    AppState *state = (AppState *)appstate;
+
     switch (event->type)
     {
 
@@ -57,7 +63,31 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         HEIGHT = event->window.data2;
         break;
 
+    case SDL_EVENT_MOUSE_MOTION:
+        state->game.hover_x = event->motion.x/(WIDTH/BOARD_SIZE);
+        state->game.hover_y = event->motion.y/(HEIGHT/BOARD_SIZE);
+        break;
+
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        int click_x = event->button.x/(WIDTH/BOARD_SIZE);
+        int click_y = event->button.y/(HEIGHT/BOARD_SIZE);
+
+        int isClickSame = (state->game.CC_x == click_x && state->game.CC_y == click_y);
+        if( !isClickSame ){
+            state->game.LC_x = state->game.CC_x;
+            state->game.LC_y = state->game.CC_y;
+
+            state->game.CC_x = click_x;
+            state->game.CC_y = click_y;
+        } 
+        
+        movePiece(state);
+
+        break;
+
     default:
+        state->game.hover_x = -1;
+        state->game.hover_y = -1;
         break;
 
     }
@@ -69,5 +99,10 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 
 void SDL_AppQuit(void *appstate, SDL_AppResult result)
 {
+    AppState *state = (AppState *)appstate;
 
+    if(state) {
+        freePieceTextures(state);
+        free(state);
+    }
 }
