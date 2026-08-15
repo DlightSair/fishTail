@@ -9,6 +9,8 @@ find_package(SDL3 CONFIG REQUIRED COMPONENTS SDL3)
 
 add_executable(chess 
     main.c
+    gameFunctions.c
+    displayFunctions.c
 )
 
 target_include_directories(chess PRIVATE headers)

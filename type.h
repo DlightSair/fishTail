@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
 
-
 #define BOARD_SIZE 8
-#define WHITE 1
-#define BLACK 2
+#define WHITE 0
+#define BLACK 1
+
 
 extern int WIDTH;
 extern int HEIGHT;
@@ -33,20 +33,6 @@ typedef struct{
     int board[BOARD_SIZE][BOARD_SIZE];
 } gameState;
 
-gameState currentGame = {
-    .curentPlayer = WHITE,
-
-    .board = {
-        {BLACK_R, BLACK_N, BLACK_B, BLACK_Q, BLACK_K, BLACK_B, BLACK_N, BLACK_R},
-        {BLACK_P, BLACK_P, BLACK_P, BLACK_P, BLACK_P, BLACK_P, BLACK_P, BLACK_P},
-        {0},
-        {0},
-        {0},
-        {0},
-        {WHITE_P, WHITE_P, WHITE_P, WHITE_P, WHITE_P, WHITE_P, WHITE_P, WHITE_P},
-        {WHITE_R, WHITE_N, WHITE_B, WHITE_Q, WHITE_K, WHITE_B, WHITE_N, WHITE_R}
-    }
-};
 
 typedef struct{
     SDL_Window *window;
