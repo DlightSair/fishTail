@@ -57,6 +57,8 @@ int checkBount(AppState *state){
     return 1;
 }
 
+
+
 int isMoveValid(AppState *state){
 
     if(!checkBount(state)) return 0; 
