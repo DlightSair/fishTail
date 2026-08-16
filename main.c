@@ -12,7 +12,7 @@ int HEIGHT = 800;
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     AppState *state = malloc( sizeof(AppState) );
-    initializeGameState(state);
+    initializeGameState(&state->game);
     
     *appstate = state;
     
@@ -81,7 +81,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
             state->game.CC_y = click_y;
         } 
         
-        movePiece(state);
+        movePiece(&state->game);
 
         break;
 

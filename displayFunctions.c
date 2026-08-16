@@ -1,5 +1,6 @@
 #include "type.h"
 #include "displayFunctions.h"
+#include "gameFunctions.h"
 
 #include <SDL3_image/SDL_image.h>
 
@@ -49,20 +50,24 @@ void freePieceTextures(AppState *appState)
     }
 }
 
-void displayBoard(AppState *appState)
+void displayBoardandPieces(AppState *appState)
 {
     int cellWidth = WIDTH/BOARD_SIZE;
     int cellHeight = HEIGHT/BOARD_SIZE;
     int delta=0;
+    float ratio = 0.75;
 
     for(int i=0; i<BOARD_SIZE; i++)
     {
         for(int j=0; j<BOARD_SIZE; j++)
         {
+
             if(appState->game.hover_x == j && appState->game.hover_y == i){
                 delta = -60;
+                ratio = 0.95;
             } else {
                 delta = 0;
+                ratio = 0.8;
             }
 
             if((i+j) % 2 == WHITE){
@@ -77,39 +82,56 @@ void displayBoard(AppState *appState)
                 .w = cellWidth,
                 .h = cellHeight
             };
-
             SDL_RenderFillRect(appState->renderer, &rect);
-        }
-    }
-}
 
-void displayPieces(AppState *appState)
-{
-    int cellWidth = WIDTH/BOARD_SIZE;
-    int cellHeight = HEIGHT/BOARD_SIZE;
 
-    for(int i=0; i<BOARD_SIZE; i++)
-    {
-        for(int j=0; j<BOARD_SIZE; j++)
-        {
             int piece = appState->game.board[i][j];
-            if(piece == 0)
+            if(!piece)
                 continue;
 
             SDL_Texture *texture = appState->pieceTextures[piece + 6];
             if(!texture)
                 continue;
 
-            SDL_FRect rect = {
-                .x = j*cellWidth + 0.1*cellWidth,
-                .y = i*cellHeight + 0.1*cellHeight,
-                .w = 0.8*cellWidth,
-                .h = 0.8*cellHeight
+            SDL_FRect pieceRect = {
+                .x = j*cellWidth + (1-ratio)*cellWidth*0.5,
+                .y = i*cellHeight + (1-ratio)*cellHeight*0.5,
+                .w = ratio*cellWidth,
+                .h = ratio*cellHeight
             };
 
-            SDL_RenderTexture(appState->renderer, texture, NULL, &rect);
+            SDL_RenderTexture(appState->renderer, texture, NULL, &pieceRect);
         }
     }
+}
+
+
+void displayPossibleMoves(AppState *AppState)
+{
+    int cellWidth = WIDTH/BOARD_SIZE;
+    int cellHeight = HEIGHT/BOARD_SIZE;
+
+    int x_pos = AppState->game.CC_x;
+    int y_pos = AppState->game.CC_y;
+
+    int piece = AppState->game.board[y_pos][x_pos];
+
+    collectionArray moves = possibleMoves(&AppState->game, x_pos, y_pos);
+    SDL_SetRenderDrawColor(AppState->renderer, 180, 180, 180, 80);
+
+    for(int i=0; i<moves.size; i++){
+
+        SDL_FRect rect = {
+            .x = (moves.point[i].x + 0.25) * cellWidth,
+            .y = (moves.point[i].y + 0.25) * cellHeight,
+            .w = cellWidth * 0.5,
+            .h = cellHeight * 0.5
+        };
+
+        SDL_RenderFillRect(AppState->renderer, &rect);
+    }
+
+    
 }
 
 void displaySDL(AppState *appState)
@@ -117,8 +139,8 @@ void displaySDL(AppState *appState)
     SDL_SetRenderDrawColor(appState->renderer, 0, 0, 0, 255);
     SDL_RenderClear(appState->renderer);
 
-    displayBoard(appState);
-    displayPieces(appState);
+    displayBoardandPieces(appState);
+    displayPossibleMoves(appState);
 
     SDL_RenderPresent(appState->renderer);
 }

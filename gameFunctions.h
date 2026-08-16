@@ -1,7 +1,8 @@
 #ifndef GAME_FUCNTIONS_H
 #define GAME_FUNCTIONS_H
 
-void initializeGameState(AppState *appState);
-void movePiece(AppState *appState);
+void initializeGameState(gameState *game);
+void movePiece(gameState *game);
+collectionArray possibleMoves(gameState *game, int x, int y);
 
 #endif

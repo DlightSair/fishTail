@@ -46,5 +46,14 @@ typedef struct{
     SDL_Texture *pieceTextures[PIECE_TEXTURE_COUNT];
 } AppState;
 
+typedef struct{
+    int x,y;
+} pointCords;
+
+typedef struct{
+    pointCords point[32];
+    int size;
+} collectionArray;
+
 
 #endif
