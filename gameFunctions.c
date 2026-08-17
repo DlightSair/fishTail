@@ -180,35 +180,6 @@ collectionArray possibleMoves(gameState *game, int x, int y){
 
 
 
-
-
-int checkBound(gameState *game){
-    if(game->CC_x < 0 || game->CC_x > 7 || game->CC_y < 0 || game->CC_y > 7 ) return 0;
-    if(game->LC_x < 0 || game->LC_x > 7 || game->LC_y < 0 || game->LC_y > 7 ) return 0;
-    return 1;
-}
-
-
-
-int isMoveValid(gameState *game){
-
-    if(!checkBound(game)) return 0; 
-
-    int currentPlayer = game->currentPlayer;
-    int movingPiece = game->board[game->LC_y][game->LC_x];
-    int newCords_x = game->CC_x;
-    int newCords_y = game->CC_y;
-
-    if(isBlank(movingPiece)) return 0;
-    if(currentPlayer == WHITE && isBlack(movingPiece)) return 0;
-    if(currentPlayer == BLACK && isWhite(movingPiece)) return 0;
-    
-
-    return 1;
-}
-
-
-
 void movePiece(gameState *game){
 
     int isValid = 0;
